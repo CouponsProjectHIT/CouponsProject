@@ -181,8 +181,9 @@ $(document).ready(function(){
     	    },
     	    {
 	    	      text: "מסך ראשי",
+	    	      name: "back-button",
 	    	      type: "back",
-	    	      href: "admin-page",
+	    	      href: 'admin-page',
 	    	      icons: {
 	    	      primary: "ui-icon-back"
 	    	      },

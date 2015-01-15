@@ -1,11 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="java.util.*"
-	import="il.ac.hit.couponsproject.model.dto.Coupon"%>
+	import="il.ac.hit.couponsproject.model.dto.Coupon"
+	import = "java.util.Date"
+	import = "java.text.DateFormat"
+	import = "java.text.SimpleDateFormat"
+	import = "java.util.Calendar"%>
+	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html dir="rtl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="30">
 <title>צפייה בקופונים</title>
 
 <!-- Bootstrap -->
@@ -17,6 +23,30 @@
 		<script src="${pageContext.request.contextPath}/js/jquery-ui.min.js"></script>
 </head>
 <body>
+<%
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+		DateFormat couponDate = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+
+		Date date = new Date();
+		String cookieName = "loggedIn";
+		boolean adminFlag = false;
+		Cookie cookies[] = request.getCookies();
+		Cookie myCookie = null;
+		if (cookies != null)
+		{
+			for (int i = 0; i < cookies.length; i++)
+			{
+				if (cookies[i].getName().equals(cookieName))
+				{
+					myCookie = cookies[i];
+					if(myCookie.getValue().equals("true"))
+					{
+					 adminFlag = true;
+					}
+				}
+			}
+		}
+%>
 	<%
 		HashSet<String> categories = (HashSet<String>) request.getAttribute("categories");
 		List<Coupon> couponsList = (List<Coupon>) request.getAttribute("CouponsList");
@@ -27,7 +57,7 @@
 		{
 	%>
 
-	
+	<%= date %>
 
 		<div align="center" >
 				<label for="categorySelection">בחר קטגוריה</label>
@@ -41,7 +71,7 @@
 								}
 						%>
 					</select>
-					<button onclick="forward()">Click me</button>
+					<button onclick="forward()">סנן</button>
 		</div>
 
 	
@@ -61,18 +91,24 @@
 				<th>מיקום</th>
 				<th>תאריך תפוגה</th>
 				<th>קטגוריה</th>
+				<%if(adminFlag == false)
+					{%>
 				<th>הוסף לעגלה</th>
+				<%} %>
 
 			</tr>
 		</thead>
 		<tbody>
 			<%
 				for (Coupon cop : couponsList)
-					{
-			%>
-
+					{		
+						out.println(cop.getExpiredate());
+						if(cop.getExpiredate().compareTo(dateFormat.format(date)) >0)
+						{
+			%>		
+				
 			<tr>
-				<td><image src=<%=cop.getImage()%> height=50 width=50 /></td>
+				<td><image src=<%=cop.getImage()%> height=50 width=50/></td>
 				<td><%=cop.getId()%></td>
 				<td><%=cop.getName()%></td>
 				<td><%=cop.getDescription()%></td>
@@ -84,10 +120,14 @@
 				<td><%=cop.getLocation()%></td>
 				<td><%=cop.getExpiredate()%></td>
 				<td><%=cop.getCategory()%></td>
+				<%if(adminFlag== false)
+				{%>
 				<td><a href="addToCart?id=<%= cop.getId() %>" class="btn btn-primary" href="addToCart" role="button">הוסף</a></td>
+				<%} %>
 			</tr>
 
 			<%
+				}
 				}
 			%>
 		</tbody>
@@ -101,7 +141,14 @@
 	<%
 		}
 	%>
-	
+		<%if(adminFlag == true)
+					{%>
+				<a class="btn btn-primary" href="admin-page" role="button">מסך ראשי</a>
+				<%}
+		else{%>
+		<a class="btn btn-primary" href="main-page" role="button">מסך ראשי</a>
+		<%} %>
+ 
 			<script>
 		var latitude, longitude;
 		$(document).ready(function(){

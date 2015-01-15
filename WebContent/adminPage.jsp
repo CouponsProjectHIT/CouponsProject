@@ -51,7 +51,7 @@
 		<a class="btn btn-primary" href="delete-coupons" role="button">מחיקת קופונים</a> 
 		<a  class="btn btn-primary" href="get-coupons" role="button" onclick="location.href=this.href+'?uLatitude='+latitude+'&uLongitude='+longitude;return false;">צפייה בקופונים</a> 
 		<a class="btn btn-primary" href="update-coupons" role="button">עדכון קופון</a>
-		<a class="btn btn-primary" href="shopping-cart" role="button">עגלה</a>
+<!-- 		<a class="btn btn-primary" href="shopping-cart" role="button">עגלה</a> -->
 		<a class="btn btn-danger" href="logout" role="button">התנתקות</a>
 	<!-- 	<a class="btn btn-primary" href="coupons-category" role="button" onclick="location.href=this.href+'?uLatitude='+latitude+'&uLongitude='+longitude;return false;">קטגוריה</a>  -->
 	</div>
