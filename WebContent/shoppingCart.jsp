@@ -19,18 +19,21 @@
 		if(cart.getSize() != 0)
 		{
 			out.println(cart.getXMLTable());
+			%>
+			<a class="btn btn-primary" href="main-page" role="button">מסך ראשי</a>
+			<%
 		}
 		else
 		{%>
 				<h2>העגלה ריקה</h2>
-				<a class="btn btn-primary" href="admin-page" role="button">מסך ראשי</a>
+				<a class="btn btn-primary" href="main-page" role="button">מסך ראשי</a>
 		<%}
 	}
 	else
 	{
 %>
 	<h2>העגלה ריקה</h2>
-	<a class="btn btn-primary" href="admin-page" role="button">מסך ראשי</a>
+	<a class="btn btn-primary" href="main-page" role="button">מסך ראשי</a>
 <%} %>
 <!-- <a href=/webstore/WebStoreController/getproducts>back</a> 
  -->

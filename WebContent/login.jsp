@@ -38,9 +38,10 @@
 
 <script>
   $(function() {
-    var buttons = $( ".selector" ).dialog( "option", "buttons" );
-     $( "#dialog" ).dialog({ hide: 'fade'} ,  {resizable: false , modal:true, draggable: false, width: '330'},
-    {show: {effect:'fade'}, durtion:1000}); 
+    var buttons = $( ".selector" ).dialog( "option", "buttons");
+     $( "#dialog" ).dialog({ hide: 'fade'} ,  {resizable: false , modal:true, draggable: false, width: '330', close : function(){
+    	 location.href='/CouponsProject/Controller/main-page';},
+    show: {effect:'fade'}, durtion:1000}); 
      var form = $( "#dialog" ).dialog({
     	  buttons: [
     	    {
@@ -51,8 +52,20 @@
     	      icons: {
     	      primary: "ui-icon-check"
     	      }
-    	    }
-    	  ]
+    	    },
+    	    {
+	    	      text: "מסך ראשי",
+	    	      type: "back",
+	    	      href: "main-page",
+	    	      icons: {
+	    	      primary: "ui-icon-arrowthick-1-w"
+	    	      }	,
+	    	      click: function() {
+	      	        	$( this ).dialog( "close" ); 
+	      	  }
+	    			
+       	    }
+       	  ]
     	});
   });
   </script>
