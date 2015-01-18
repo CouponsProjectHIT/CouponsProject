@@ -57,6 +57,9 @@
 </head>
 <body dir='rtl'>
 	<%
+ 	/**
+     * Check for admin cookie 
+ 	 */
 		String cookieName = "loggedIn";
 		Cookie cookies[] = request.getCookies();
 		Cookie myCookie = null;
@@ -89,6 +92,9 @@
 		}
 	%>
 	<%
+ 	/**
+     * Load the coupons and let the admin select one coupon and update his details
+ 	 */
 		List<Coupon> couponsList = (List<Coupon>) request.getAttribute("CouponsList");
 		if (couponsList.size() != 0)
 		{

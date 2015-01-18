@@ -9,6 +9,9 @@
 </head>
 <body>
 	<%
+ 	/**
+     * Set the 'loggedIn' cookie value as 'false' to set that the admin has logged out 
+ 	 */
 		String cookieName = "loggedIn";
 		Cookie cookies[] = request.getCookies();
 		Cookie myCookie = null;

@@ -22,6 +22,9 @@
 </head>
 <body>
 	<%
+ 	/**
+     * Load the categories from the Controller
+ 	 */
 		HashSet<String> categories = (HashSet<String>) request.getAttribute("categories");
 	%>
 	<div align="center">

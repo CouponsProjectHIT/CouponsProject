@@ -21,8 +21,13 @@
 </head>
 <body>
 <%
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	/**
+     * Check if the user is admin and if so he get different redirections
+	 */
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+		DateFormat couponDate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date date = new Date();
+		Date theCouponDate;
 		String cookieName = "loggedIn";
 		boolean adminFlag = false;
 		Cookie cookies[] = request.getCookies();
@@ -43,6 +48,10 @@
 		}
 %>
 	<%
+ 	/**
+     * Load the coupons into a table
+ 	 */
+	
 		List<Coupon> couponsList = (List<Coupon>) request.getAttribute("coupons");
 	%>
 
@@ -64,14 +73,12 @@
 				<th>מחיר לפני הנחה</th>
 				<th>אחוז הנחה</th>
 			    <th>מחיר חדש</th>
-<!-- 			<th>קו אורך</th>
-				<th>קו רוחב</th> -->
 				<th>מיקום</th>
 				<th>תאריך תפוגה</th>
 				<th>קטגוריה</th>
 				<%if(adminFlag == false)
 				{%>
-				<th>הוסף לעגלה</th>
+					<th>הוסף לעגלה</th>
 				<%} %>
 
 			</tr>
@@ -80,20 +87,22 @@
 			<%
 				for (Coupon cop : couponsList)
 					{
-					if(cop.getExpiredate().compareTo(dateFormat.format(date)) >0)
-					{
-			%>
-
-			<tr>
-				<td><image src=<%=cop.getImage()%> height=50 width=50 /></td>
+					theCouponDate = couponDate.parse(cop.getExpiredate());
+					if(theCouponDate.compareTo(date) < 0)
+					{ %>
+					<tr class="danger">
+				<%}
+				else
+				{ %>
+					<tr class="info">
+				<%}%>
+				<td><image src=<%=cop.getImage()%> height=100 width=100 /></td>
 				<td><%=cop.getId()%></td>
 				<td><%=cop.getName()%></td>
 				<td><%=cop.getDescription()%></td>
 				<td><%=cop.getPrice()%></td>
 				<td><%=cop.getDiscount()%></td>
 				<td><%=cop.getNewprice()%></td>
-<%-- 			<td><%=cop.getLatitude()%></td>
-				<td><%=cop.getLongitude()%></td> --%>
 				<td><%=cop.getLocation()%></td>
 				<td><%=cop.getExpiredate()%></td>
 				<td><%=cop.getCategory()%></td>
@@ -105,7 +114,7 @@
 
 			<%
 				}
-				}
+				
 			%>
 		</tbody>
 	</table>

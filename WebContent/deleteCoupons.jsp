@@ -31,6 +31,9 @@
 </head>
 <body dir="rtl">
 	<%
+ 	/**
+     * Check for admin cookie 
+ 	 */
 		String cookieName = "loggedIn";
 			Cookie cookies[] = request.getCookies();
 			Cookie myCookie = null;
@@ -63,6 +66,10 @@
 		}
 	%>
 	<%
+ 	/**
+     * Load the coupons into a HTML select and store the ID as value
+     * Pressing the submit will delte a coupon
+ 	 */
 		List<Coupon> couponsList = (List<Coupon>) request.getAttribute("CouponsList");
 			if (couponsList.size() != 0)
 			{

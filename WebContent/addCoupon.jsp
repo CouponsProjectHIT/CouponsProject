@@ -37,6 +37,9 @@
 </head>
 <body dir='rtl'>
 	<%
+ 	/**
+     * Check for admin cookie 
+ 	 */
 		String cookieName = "loggedIn";
 		Cookie cookies[] = request.getCookies();
 		Cookie myCookie = null;
