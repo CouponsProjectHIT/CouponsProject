@@ -9,7 +9,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="refresh" content="30">
+<meta http-equiv="refresh" uLatitude="metaRefresh" uLongitude="metaRefresh" content="30">
 <title>צפייה בקופונים</title>
 
 <!-- Bootstrap -->
@@ -22,10 +22,13 @@
 </head>
 <body>
 	<%
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-			DateFormat couponDate = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-
+ 	/**
+     * Load all coupons and categories
+ 	 */
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+			DateFormat couponDate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			Date date = new Date();
+			Date theCouponDate;
 			String cookieName = "loggedIn";
 			boolean adminFlag = false;
 			Cookie cookies[] = request.getCookies();
@@ -83,8 +86,6 @@
 				<th>מחיר לפני הנחה</th>
 				<th>אחוז הנחה</th>
 				<th>מחיר חדש</th>
-				<!-- 			<th>קו אורך</th>
-				<th>קו רוחב</th> -->
 				<th>מיקום</th>
 				<th>תאריך תפוגה</th>
 				<th>קטגוריה</th>
@@ -102,12 +103,17 @@
 		<tbody>
 			<%
 				for (Coupon cop : couponsList)
-						{		
-							if(cop.getExpiredate().compareTo(dateFormat.format(date)) >0)
-							{
-			%>
+				{		
+					theCouponDate = couponDate.parse(cop.getExpiredate());
 
-			<tr>
+					if(theCouponDate.compareTo(date) < 0)
+					{ %>
+						<tr class="danger">
+					<%}
+					else
+					{ %>
+						<tr class="info">
+					<%}%>
 				<td><image src=<%=cop.getImage()%> height=100 width=100 /></td>
 				<td><%=cop.getId()%></td>
 				<td><%=cop.getName()%></td>
@@ -119,19 +125,22 @@
 				<td><%=cop.getExpiredate()%></td>
 				<td><%=cop.getCategory()%></td>
 				<%
-					if(adminFlag== false)
+					if(adminFlag== false || (theCouponDate.compareTo(date) > 0))
 						{
 				%>
-				<td><a href="addToCart?id=<%=cop.getId()%>"
-					class="btn btn-primary" href="addToCart" role="button">הוסף</a></td>
+				<td><a href="addToCart?id=<%=cop.getId()%>"class="btn btn-primary" href="addToCart" role="button">הוסף</a></td>
 				<%
 					}
+					else
+					{ %>
+						<td><a disabled=disable href="addToCart?id=<%=cop.getId()%>"class="btn btn-primary" href="addToCart" role="button">הוסף</a></td>
+					<%}
 				%>
 			</tr>
 
 			<%
 				}
-					}
+					
 			%>
 		</tbody>
 	</table>

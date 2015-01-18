@@ -41,7 +41,9 @@ import il.ac.hit.couponsproject.model.dto.ShoppingCart;
 public class Controller extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	 /** creating a ICouponsDAO that will communicate with the database  */
+	 /* 
+	  * creating a ICouponsDAO that will communicate with the database 
+	  */ 
 	private ICouponsDAO dao = new HibernateCouponsDAO();
 
 	/**
@@ -60,22 +62,43 @@ public class Controller extends HttpServlet
 	 */
 	
 	 /** 
-     * forward the page to the adminPage
-     * @param request, response
-     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     * Forward the page to the errorPage
+     * @param request the HttpServletRequest
+     * @param response the HttpServletResponse
+     * @throws javax.servlet.ServletException if there was a Servlet problem
+     * @throws java.io.IOException if there is a problem forward the page.
      */
-	public void AdminPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void errorPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/errorPage.jsp");
+		dispatcher.forward(request, response);
+	}
+	
+	 /** 
+     * Forward the page to the adminPage
+     * @param request the HttpServletRequest
+     * @param response the HttpServletResponse
+     * @throws javax.servlet.ServletException if there was a Servlet problem
+     * @throws java.io.IOException if there is a problem forward the page.
+     */
+	public void adminPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/adminPage.jsp");
 		dispatcher.forward(request, response);
 	}
+	
 	 /** 
-     * forward the page to the shoppingCart page in order to remove coupon
-     * @param request, response
-     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     * Forward the page to the shoppingCart page in order to remove coupon
+     * @param request the HttpServletRequest
+     * @param response the HttpServletResponse
+     * @throws javax.servlet.ServletException if there was a Servlet problem
+     * @throws java.io.IOException if there is a problem forward the page.
      */
-	public void RemoveFromCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void removeFromCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		/*
+		 * Get the coupon ID from the customer(View model) and search for it in the shopping cart session and remove it.
+		 */
 		String couponId = request.getParameter("id");
 		Coupon selectedCoupon = null;
 		HttpSession session = request.getSession();
@@ -90,10 +113,12 @@ public class Controller extends HttpServlet
 			catch (NumberFormatException e)
 			{
 				e.printStackTrace();
+				response.sendRedirect("/CouponsProject/Controller/error-page?error=" + e.getStackTrace().toString() + "\n\n" + e.getMessage());
 			}
 			catch (CouponException e)
 			{
 				e.printStackTrace();
+				response.sendRedirect("/CouponsProject/Controller/error-page?error=" + e.getStackTrace().toString() + "\n\n" + e.getMessage());
 			}
 
 		}
@@ -102,12 +127,18 @@ public class Controller extends HttpServlet
 	}
 	
 	 /** 
-     * forward the page to the updateCoupons page
-     * @param request, response
-     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     * Forward the page to the updateCoupons page
+     * @param request the HttpServletRequest
+     * @param response the HttpServletResponse
+     * @throws javax.servlet.ServletException if there was a Servlet problem
+     * @throws java.io.IOException if there is a problem forward the page.
      */
-	public void UpdateCoupons(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void updateCoupons(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		/*
+		 * Get the parameters from the view, check if the input is correct , create a coupon object and use DAO to update.
+		 * if there is a problem we store it in hashmap and update the view model with the error.
+		 */
 		//creating input checking assistance
 		boolean errorFlag = false; 
 		Map<String, String> errors = new HashMap<String, String>();
@@ -126,6 +157,7 @@ public class Controller extends HttpServlet
 		catch (CouponException e)
 		{
 			e.printStackTrace();
+			response.sendRedirect("/CouponsProject/Controller/error-page?error=" + e.getStackTrace().toString() + "\n\n" + e.getMessage());
 		}
 
 		if (request.getParameter("couponSelection") != null)
@@ -237,7 +269,8 @@ public class Controller extends HttpServlet
 					}
 					catch (CouponException e)
 					{
-						e.printStackTrace();
+						e.getStackTrace().toString();
+						response.sendRedirect("/CouponsProject/Controller/error-page?error=" + e.getStackTrace().toString() + "\n\n" + e.getMessage());
 					}
 				}
 				else
@@ -249,13 +282,13 @@ public class Controller extends HttpServlet
 			}
 			catch (NumberFormatException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				response.sendRedirect("/CouponsProject/Controller/error-page?error=" + e.getStackTrace().toString() + "\n\n" + e.getMessage());
 			}
 			catch (CouponException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				response.sendRedirect("/CouponsProject/Controller/error-page?error=" + e.getStackTrace().toString() + "\n\n" + e.getMessage());
 			}
 		}
 
@@ -264,12 +297,19 @@ public class Controller extends HttpServlet
 	}
 	
 	 /** 
-     * forward the page to the addCoupon page
-     * @param request, response
-     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     * Forward the page to the addCoupon page
+     * @param request the HttpServletRequest
+     * @param response the HttpServletResponse
+     * @throws javax.servlet.ServletException if there was a Servlet problem
+     * @throws java.io.IOException if there is a problem forward the page.
      */
-	public void AddCoupon(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void addCoupon(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		/*
+		 * Get the parameters from the HttpServletRequest, check the input and if its correct we create a new Coupon object and
+		 * insert it with the DAO.
+		 * if there is a problem we store it in hashmap and update the view model with the problem.
+		 */
 		//creating input checking assistance
 		boolean errorFlag = false;
 		Map<String, String> errors = new HashMap<String, String>();
@@ -306,12 +346,11 @@ public class Controller extends HttpServlet
 			}
 			
 			//Checking if there is errors on the inputs parameters
-			if (couponName.isEmpty() == true)
+		   if (couponName.isEmpty() == true)
 			{
-
-				errors.put("couponName", "שם קופון שגוי !");
-				errorFlag = true;
-			}
+					errors.put("couponName", "שם קופון שגוי !");
+					errorFlag = true;
+		    }
 			else
 			{
 				if (couponName.length() <= 1)
@@ -427,6 +466,7 @@ public class Controller extends HttpServlet
 				catch (CouponException e)
 				{
 					e.printStackTrace();
+					response.sendRedirect("/CouponsProject/Controller/error-page?error=" + e.getStackTrace().toString() + "\n\n" + e.getMessage());
 				}
 			}
 		}
@@ -440,12 +480,18 @@ public class Controller extends HttpServlet
 	}
 	
 	 /** 
-     * forward the page to the couponsCat page in order to show coupons by specific category
-     * @param request, response
-     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     * Forward the page to the couponsCat page in order to show coupons by specific category
+     * @param request the HttpServletRequest
+     * @param response the HttpServletResponse
+     * @throws javax.servlet.ServletException if there was a Servlet problem
+     * @throws java.io.IOException if there is a problem forward the page.
      */
-	public void CouponCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void couponCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		/*
+		 * Get the latitude and longitude from the user(view) get the selected category.
+		 * Using the DAO to get the closet coupons in the specific category.
+		 */
 		//get the location of the client
 		double latitude = Double.parseDouble(request.getParameter("latitude").toString());
 		double longitude = Double.parseDouble(request.getParameter("longitude").toString());
@@ -458,29 +504,38 @@ public class Controller extends HttpServlet
 		catch (CouponException e)
 		{
 			e.printStackTrace();
+			response.sendRedirect("/CouponsProject/Controller/error-page?error=" + e.getStackTrace().toString() + "\n\n" + e.getMessage());
 		}
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/couponsCat.jsp");
 		dispatcher.forward(request, response);
 	}
 	
 	/** 
-     * forward the page to the logout page
-     * @param request, response
-     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     * Forward the page to the logout page
+     * @param request the HttpServletRequest
+     * @param response the HttpServletResponse
+     * @throws javax.servlet.ServletException if there was a Servlet problem
+     * @throws java.io.IOException if there is a problem forward the page.
      */
-	public void Logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/logout.jsp");
 		dispatcher.forward(request, response);
 	}
 	
 	 /** 
-     * forward the page to the deleteCoupon page
-     * @param request, response
-     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     * Forward the page to the deleteCoupon page
+     * @param request the HttpServletRequest
+     * @param response the HttpServletResponse
+     * @throws javax.servlet.ServletException if there was a Servlet problem
+     * @throws java.io.IOException if there is a problem forward the page.
      */
-	public void DeleteCoupons(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void deleteCoupons(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		/*
+		 * Get the selected coupon ID from the user, using the DAO we remove the coupon by the ID.
+		 * Send a message to the user if the coupon removed or not.
+		 */
 		//get the list of all coupons that exist
 		List<Coupon> coupons = null;
 		try
@@ -490,6 +545,7 @@ public class Controller extends HttpServlet
 		catch (CouponException e1)
 		{
 			e1.printStackTrace();
+			response.sendRedirect("/CouponsProject/Controller/error-page?error=" + e1.getMessage());
 		}
 		//getting the id of the coupon that should be delete
 		String couponId = request.getParameter("couponSelection");
@@ -516,23 +572,30 @@ public class Controller extends HttpServlet
 	}
 	
 	 /** 
-     * forward the page to the shoppingCart page
-     * @param request, response
-     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     * Forward the page to the shoppingCart page
+     * @param request the HttpServletRequest
+     * @param response the HttpServletResponse
+     * @throws javax.servlet.ServletException if there was a Servlet problem
+     * @throws java.io.IOException if there is a problem forward the page.
      */
-	public void ShoppingCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void shoppingCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/shoppingCart.jsp");
 		dispatcher.forward(request, response);
 	}
 	
 	 /** 
-     * forward the page to the add to cart page
-     * @param request, response
-     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     * Add a new coupon to the shopping cart.
+     * @param request the HttpServletRequest
+     * @param response the HttpServletResponse
+     * @throws javax.servlet.ServletException if there was a Servlet problem
+     * @throws java.io.IOException if there is a problem forward the page.
      */
-	public void shoppingCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void addToCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		/*
+		 * Get the ID parameter and add the coupon to the shopping cart.
+		 */
 		Coupon coupon = null;
 		String couponId = request.getParameter("id").toString();
 		if (couponId != null) {
@@ -545,8 +608,8 @@ public class Controller extends HttpServlet
 			}
 			catch (CouponException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				response.sendRedirect("/CouponsProject/Controller/error-page?error=" + e.getStackTrace().toString() + "\n\n" + e.getMessage());
 			}
 			//getting the existent cart 
 			HttpSession session = request.getSession();
@@ -564,15 +627,33 @@ public class Controller extends HttpServlet
 	}}
 
 	 /** 
-     * forward the page to the viewCoupons page in order to show all coupons
-     * @param request, response
-     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     * Forward the page to the viewCoupons page in order to show all coupons
+     * @param request the HttpServletRequest
+     * @param response the HttpServletResponse
+     * @throws javax.servlet.ServletException if there was a Servlet problem
+     * @throws java.io.IOException if there is a problem forward the page.
      */
-	public void GetCouponsPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void getCouponsPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		/*
+		 * Get the user latitude and longitude.
+		 * Get the nearest coupons by the latitude and longitude using the DAO.
+		 * Get the categories and show them too.
+		 */
 		//getting the location of the client
-		double latitude = Double.parseDouble(request.getParameter("uLatitude").toString());
-		double longitude = Double.parseDouble(request.getParameter("uLongitude").toString());
+		boolean exceptionOccured = false;
+		double latitude = 0;
+		double longitude = 0;
+		try
+		{
+		     latitude = Double.parseDouble(request.getParameter("uLatitude").toString());
+			 longitude = Double.parseDouble(request.getParameter("uLongitude").toString());
+		}
+		catch(NullPointerException e)
+		{
+			exceptionOccured = true;
+			response.sendRedirect("/CouponsProject/Controller/error-page?error=" + e.getStackTrace().toString() + "\n\n" + e.getMessage());
+		}
 		List<Coupon> coupons = null;
 		HashSet<String> categories = dao.getCategories();
 		request.setAttribute("categories", categories);
@@ -583,31 +664,44 @@ public class Controller extends HttpServlet
 		catch (CouponException e)
 		{
 			e.printStackTrace();
+			response.sendRedirect("/CouponsProject/Controller/error-page?error=" + e.getStackTrace().toString() + "\n\n" + e.getMessage());
 		}
 		request.setAttribute("CouponsList", coupons);
 		
-		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/viewCoupons.jsp");
-		dispatcher.forward(request, response);
+		if(exceptionOccured != true)
+		{
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/viewCoupons.jsp");
+			dispatcher.forward(request, response);
+		}
 	}
 
 	 /** 
-     * forward the page to the mainPage page
-     * @param request, response
-     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     * Forward the page to the mainPage page
+     * @param request the HttpServletRequest
+     * @param response the HttpServletResponse
+     * @throws javax.servlet.ServletException f there was a problem with the Servlet
+     * @throws java.io.IOException if there is a problem forward the page.
      */
-	public void MainPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void mainPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/mainPage.jsp");
 		dispatcher.forward(request, response);
 	}
 	
 	 /** 
-     * forward the page to the login page
-     * @param request, response
-     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     * Forward the page to the login page
+     * @param request the HttpServletRequest
+     * @param response the HttpServletResponse
+     * @throws javax.servlet.ServletException if there was a problem with the Servlet
+     * @throws java.io.IOException if there is a problem forward the page.
      */
-	public void LoginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void loginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		/*
+		 * Get the user input (username, password)
+		 * Encrypt the password to MD5 and check if it equals the admin password from the login file.
+		 * Is its correct the admin forward to the admin page and if not it stays the login page.
+		 */
 		List<String> lines = Files.readAllLines(Paths.get(getServletContext().getRealPath("/WEB-INF/login.txt")), Charset.defaultCharset());
 		byte[] bytesOfMessage;
 
@@ -645,8 +739,8 @@ public class Controller extends HttpServlet
 			}
 			catch (NoSuchAlgorithmException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				response.sendRedirect("/CouponsProject/Controller/error-page?error=" + e.getStackTrace().toString() + "\n\n" + e.getMessage());
 			}			
 		}
 		else
@@ -658,57 +752,64 @@ public class Controller extends HttpServlet
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		/*
+		 * Get the URL path and forward it to the correct request.
+		 */
 		response.setContentType("text/html; charset=utf-8");
 		request.setCharacterEncoding("UTF-8");
 		String path = request.getPathInfo();
 		if (path.contains("get-coupons"))
 		{
-			GetCouponsPage(request, response);
+			getCouponsPage(request, response);
 		}
 		else if(path.contains("main-page"))
 		{
-			MainPage(request, response);
+			mainPage(request, response);
+		}
+		else if(path.contains("error-page"))
+		{
+			errorPage(request, response);
 		}
 		else if(path.contains("coupon-cat"))
 		{
-			CouponCategory(request, response);
+			couponCategory(request, response);
 			
 		}
 		else if(path.contains("logout"))
 		{
-			Logout(request, response);
+			logout(request, response);
 		}
 		else if(path.contains("admin-page"))
 		{
-			AdminPage(request, response);
+			adminPage(request, response);
 		}
 		else if(path.contains("login-page"))
 		{
-			LoginPage(request, response);
+			loginPage(request, response);
 		}
 		else if(path.contains("removeFromCart"))
 		{
-			RemoveFromCart(request, response);
+			removeFromCart(request, response);
 		}
 		else if(path.contains("addToCart"))
 		{
-			shoppingCart(request, response);
+			addToCart(request, response);
 		}
 		else if(path.contains("shopping-cart"))
 		{
-			ShoppingCart(request, response);
+			shoppingCart(request, response);
 		}
 		else if (path.contains("update-coupons"))
 		{
-			UpdateCoupons(request, response);
+			updateCoupons(request, response);
 		}
 		else if (path.contains("delete-coupons"))
 		{
-			DeleteCoupons(request, response);
+			deleteCoupons(request, response);
 		}
 		else if (path.contains("add-coupon"))
 		{
-			AddCoupon(request, response);
+			addCoupon(request, response);
 		}
 	}
 
@@ -719,7 +820,5 @@ public class Controller extends HttpServlet
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		doGet(request, response);
-
 	}
-
 }

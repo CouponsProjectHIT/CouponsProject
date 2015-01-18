@@ -6,6 +6,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" uLatitude="metaRefresh" uLongitude="metaRefresh" content="30">
 <title>ShoppingCart</title>
 <!-- Bootstrap -->
 <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -13,6 +14,9 @@
 </head>
 <body>
 <%
+	/**
+ 	 * Load the ShoppingCart (Get the XML data) for the user
+	 */
 	ShoppingCart cart = (ShoppingCart)(session.getAttribute("cart"));
 	if(cart != null)
 	{

@@ -3,9 +3,10 @@ package il.ac.hit.couponsproject.model.dto;
 import il.ac.hit.couponsproject.exception.CouponException;
 import il.ac.hit.couponsproject.model.dao.ICouponsDAO;
 import il.ac.hit.couponsproject.model.dao.impl.HibernateCouponsDAO;
+
 import java.util.*;
-import java.util.Date;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -18,7 +19,7 @@ public class ShoppingCart
 	int size = 0;
 	
 	/** 
-     * adding new coupon to the shopping cart
+     * Adding new coupon to the shopping cart
      * @param coupon specific coupon
      */
 	public void addCoupon(Coupon coupon)
@@ -34,14 +35,18 @@ public class ShoppingCart
 		}
 	}
 	
+	/**
+	 * Return the shopping cart items amount
+	 * @return size
+	 */
 	public int getSize()
 	{
 		return size;
 	}
 	
 	/** 
-     * remove coupon from the shopping cart
-     * @param coupon specific coupon
+     * Remove a coupon from the shopping cart
+     * @param coupon the coupon to remove
      */
 	public void removeCoupon(Coupon coupon)
 	{
@@ -49,35 +54,32 @@ public class ShoppingCart
 		size--;
 	}
 	
-	//??
-	public double getTotal()
-	{
-		double total = 0;
-		Iterator iterator = lines.values().iterator();
-		while(iterator.hasNext())
-		{
-			ShoppingCartLine line = (ShoppingCartLine)iterator.next();
-		}
-		return total;
-	}
 	
 	/** 
      * Creating the XML table that show all the coupons that in the cart
+     * @return a String that contains the XML data.
+	 * @throws ParseException 
      */
-	public String getXMLTable()
+	public String getXMLTable() throws ParseException
 	{
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		/*
+		 * Load all the coupons in the cart and create a XML table with the coupons.
+		 */
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+		DateFormat couponDate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date date = new Date();
+		Date theCouponDate;
 		StringBuffer sb = new StringBuffer();
 		Coupon currentCoupon = null;
-		sb.append("<table class='table table-bordered table-striped' border='fixed'><thead><tr><th>תמונה</th><th>קוד קופון</th><th>שם קופון</th><th>תיאור</th><th>מחיר לפני הנחה</th><th>אחוז הנחה</th><th>מחיר חדש</th><th>תאריך תפוגה</th><th>מיקום</th><th>קטגוריה</th><th>הסר מהעגלה</th></tr></thead><tbody>");
 		Iterator iterator = lines.values().iterator();
+		sb.append("<table class='table table-bordered table-striped' border='fixed'><thead><tr><th>תמונה</th><th>קוד קופון</th><th>שם קופון</th><th>תיאור</th><th>מחיר לפני הנחה</th><th>אחוז הנחה</th><th>מחיר חדש</th><th>תאריך תפוגה</th><th>מיקום</th><th>קטגוריה</th><th>הסר מהעגלה</th></tr></thead><tbody>");
+
 		while(iterator.hasNext())
 		{
 			ShoppingCartLine line = (ShoppingCartLine)iterator.next();
 			currentCoupon = line.getCoupon();
-			System.out.println(currentCoupon.getExpiredate());
-			if(currentCoupon.getExpiredate().compareTo(dateFormat.format(date)) >0)
+			theCouponDate = couponDate.parse(currentCoupon.getExpiredate());
+			if(theCouponDate.compareTo(date) > 0)
 			{
 				sb.append("<td><img src="+currentCoupon.getImage()+" height=50 width=50 /></td>");
 				sb.append("<td>"+currentCoupon.getId()+"</td>");
