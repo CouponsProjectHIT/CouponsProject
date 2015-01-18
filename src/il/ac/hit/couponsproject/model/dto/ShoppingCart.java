@@ -9,11 +9,18 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+/** 
+ * Class that describe a shopping cart
+ */
 public class ShoppingCart
 {
 	Map lines = new Hashtable();
 	int size = 0;
 	
+	/** 
+     * adding new coupon to the shopping cart
+     * @param coupon specific coupon
+     */
 	public void addCoupon(Coupon coupon)
 	{
 		if(lines.get(coupon)==null)
@@ -32,12 +39,17 @@ public class ShoppingCart
 		return size;
 	}
 	
+	/** 
+     * remove coupon from the shopping cart
+     * @param coupon specific coupon
+     */
 	public void removeCoupon(Coupon coupon)
 	{
 		lines.remove(coupon.getId());
 		size--;
 	}
 	
+	//??
 	public double getTotal()
 	{
 		double total = 0;
@@ -49,6 +61,9 @@ public class ShoppingCart
 		return total;
 	}
 	
+	/** 
+     * Creating the XML table that show all the coupons that in the cart
+     */
 	public String getXMLTable()
 	{
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -71,8 +86,6 @@ public class ShoppingCart
 				sb.append("<td>"+currentCoupon.getPrice()+"</td>");
 				sb.append("<td>"+currentCoupon.getDiscount()+"</td>");
 				sb.append("<td>"+currentCoupon.getNewprice()+"</td>");
-/*				sb.append("<td>"+currentCoupon.getLongitude()+"</td>");
-				sb.append("<td>"+currentCoupon.getLatitude()+"</td>");*/
 				sb.append("<td>"+currentCoupon.getExpiredate()+"</td>");
 				sb.append("<td>"+currentCoupon.getLocation()+"</td>");
 				sb.append("<td>"+currentCoupon.getCategory()+"</td>");

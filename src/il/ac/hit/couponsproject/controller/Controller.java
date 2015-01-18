@@ -35,17 +35,20 @@ import il.ac.hit.couponsproject.model.dto.Coupon;
 import il.ac.hit.couponsproject.model.dto.ShoppingCart;
 
 /**
- * Servlet implementation class Controller
+ * This is an class that extends Servlet and using as a Controller that serves as the project manager
  */
 @WebServlet("/Controller/*")
 public class Controller extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
+	 /** creating a ICouponsDAO that will communicate with the database  */
 	private ICouponsDAO dao = new HibernateCouponsDAO();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
+	
+	
 	public Controller()
 	{
 		super();
@@ -55,34 +58,41 @@ public class Controller extends HttpServlet
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	
+	 /** 
+     * forward the page to the adminPage
+     * @param request, response
+     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     */
 	public void AdminPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/adminPage.jsp");
 		dispatcher.forward(request, response);
 	}
-	
+	 /** 
+     * forward the page to the shoppingCart page in order to remove coupon
+     * @param request, response
+     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     */
 	public void RemoveFromCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		String couponId = request.getParameter("id");
 		Coupon selectedCoupon = null;
 		HttpSession session = request.getSession();
-		ShoppingCart cart = (ShoppingCart) (session.getAttribute("cart"));
-		System.out.println(cart.toString());
+		ShoppingCart cart = (ShoppingCart) (session.getAttribute("cart")); //getting the existent cart from the session 
 		if (couponId != null) 
 		{
 			try
 			{
-				selectedCoupon = dao.getCoupon(Integer.parseInt(couponId));
-				cart.removeCoupon(selectedCoupon);
+				selectedCoupon = dao.getCoupon(Integer.parseInt(couponId)); //getting the specific coupon from the data base
+				cart.removeCoupon(selectedCoupon); //removing the coupon from the cart
 			}
 			catch (NumberFormatException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			catch (CouponException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -91,9 +101,15 @@ public class Controller extends HttpServlet
 		dispatcher.forward(request, response);
 	}
 	
+	 /** 
+     * forward the page to the updateCoupons page
+     * @param request, response
+     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     */
 	public void UpdateCoupons(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		boolean errorFlag = false;
+		//creating input checking assistance
+		boolean errorFlag = false; 
 		Map<String, String> errors = new HashMap<String, String>();
 		List<Coupon> coupons = null;
 		Coupon selectedCoupon = null;
@@ -117,6 +133,7 @@ public class Controller extends HttpServlet
 			try
 			{
 				selectedCoupon = dao.getCoupon(Integer.parseInt(request.getParameter("couponSelection")));
+				//Checking if the name of the coupon is correct
 				if (request.getParameter("coupon-name").isEmpty() == false)
 				{
 					if (request.getParameter("coupon-name").length() > 1)
@@ -129,6 +146,7 @@ public class Controller extends HttpServlet
 						errorFlag = true;
 					}
 				}
+				//Checking if the description of the coupon is correct
 				if (request.getParameter("coupon-description").isEmpty() == false)
 				{
 					System.out.println(request.getParameter("coupon-description"));
@@ -142,6 +160,7 @@ public class Controller extends HttpServlet
 						errorFlag = true;
 					}
 				}
+				//Checking if the expiredate of the coupon is correct
 				if (request.getParameter("coupon-expiredate").length() != 0)
 				{
 						selectedCoupon.setExpiredate(request.getParameter("coupon-expiredate"));
@@ -163,6 +182,7 @@ public class Controller extends HttpServlet
 						errorFlag = true;
 					}
 				}
+				//Checking if the discount of the coupon is correct
 				if (request.getParameter("coupon-discount").length() != 0)
 				{
 					try
@@ -180,6 +200,7 @@ public class Controller extends HttpServlet
 						errorFlag = true;
 					}
 				}
+				//Calculating the new price after the discount
 				if ((request.getParameter("coupon-discount").length() != 0) && (request.getParameter("coupon-price").length() != 0))
 				{
 					selectedCoupon.setNewprice(Double.parseDouble(request.getParameter("coupon-price")) - (Double.parseDouble(request.getParameter("coupon-discount")) * Double.parseDouble((request.getParameter("coupon-price"))) / 100));
@@ -192,15 +213,18 @@ public class Controller extends HttpServlet
 				{
 					selectedCoupon.setNewprice(Double.parseDouble(request.getParameter("coupon-price")) - (selectedCoupon.getDiscount() * Double.parseDouble(request.getParameter("coupon-price")) / 100));
 				}
+				//Checking if the image of the coupon is correct
 				if (request.getParameter("coupon-image").isEmpty() != true)
 				{
 					selectedCoupon.setImage(request.getParameter("coupon-image"));
 				}
+				//Checking if the location of the coupon is correct
 				if (request.getParameter("gmaps-input-address").isEmpty() != true)
 				{
 					selectedCoupon.setLatitude(Double.parseDouble(request.getParameter("gmaps-output-latitude")));
 					selectedCoupon.setLongitude(Double.parseDouble(request.getParameter("gmaps-output-longitude")));
 				}
+				//Checking if there was any errors
 				if (errorFlag == false)
 				{
 					dao.updateCoupon(selectedCoupon);
@@ -239,13 +263,20 @@ public class Controller extends HttpServlet
 		dispatcher.forward(request, response);
 	}
 	
+	 /** 
+     * forward the page to the addCoupon page
+     * @param request, response
+     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     */
 	public void AddCoupon(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		//creating input checking assistance
 		boolean errorFlag = false;
 		Map<String, String> errors = new HashMap<String, String>();
 		String couponName = request.getParameter("coupon-name");
 		if (couponName != null)
 		{
+			//Getting the parameters of the new coupon
 			String[] splitedDate = new String[2];
 			String couponDescription = request.getParameter("coupon-description");
 			String couponExpireDate = request.getParameter("coupon-expiredate");
@@ -273,7 +304,8 @@ public class Controller extends HttpServlet
 			{
 				entry.setValue("");
 			}
-
+			
+			//Checking if there is errors on the inputs parameters
 			if (couponName.isEmpty() == true)
 			{
 
@@ -380,7 +412,8 @@ public class Controller extends HttpServlet
 				errors.put("couponLocation", "אנא הכנס מיקום");
 				errorFlag = true;
 			}
-
+			
+			//Adding the new coupon
 			if (errorFlag == false)
 			{
 				Coupon newCoupon = new Coupon(couponName, couponDescription, Double.parseDouble(latitude), Double.parseDouble(longitude), couponExpireDate, Double.parseDouble(couponPrice),
@@ -406,11 +439,17 @@ public class Controller extends HttpServlet
 		dispatcher.forward(request, response);
 	}
 	
+	 /** 
+     * forward the page to the couponsCat page in order to show coupons by specific category
+     * @param request, response
+     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     */
 	public void CouponCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		//get the location of the client
 		double latitude = Double.parseDouble(request.getParameter("latitude").toString());
 		double longitude = Double.parseDouble(request.getParameter("longitude").toString());
-		String category = request.getParameter("category").toString();
+		String category = request.getParameter("category").toString();//get the category that needs to show
 		try
 		{
 			List<Coupon> coupons = dao.getCouponsByCategoryDistance(category, latitude, longitude);
@@ -418,21 +457,31 @@ public class Controller extends HttpServlet
 		}
 		catch (CouponException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/couponsCat.jsp");
 		dispatcher.forward(request, response);
 	}
 	
+	/** 
+     * forward the page to the logout page
+     * @param request, response
+     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     */
 	public void Logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/logout.jsp");
 		dispatcher.forward(request, response);
 	}
 	
+	 /** 
+     * forward the page to the deleteCoupon page
+     * @param request, response
+     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     */
 	public void DeleteCoupons(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		//get the list of all coupons that exist
 		List<Coupon> coupons = null;
 		try
 		{
@@ -440,10 +489,11 @@ public class Controller extends HttpServlet
 		}
 		catch (CouponException e1)
 		{
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		//getting the id of the coupon that should be delete
 		String couponId = request.getParameter("couponSelection");
+		//deletes the coupon
 		if (couponId != null)
 		{
 			try
@@ -465,13 +515,23 @@ public class Controller extends HttpServlet
 		dispatcher.forward(request, response);
 	}
 	
+	 /** 
+     * forward the page to the shoppingCart page
+     * @param request, response
+     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     */
 	public void ShoppingCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/shoppingCart.jsp");
 		dispatcher.forward(request, response);
 	}
 	
-	public void AddToCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	 /** 
+     * forward the page to the add to cart page
+     * @param request, response
+     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     */
+	public void shoppingCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		Coupon coupon = null;
 		String couponId = request.getParameter("id").toString();
@@ -488,10 +548,12 @@ public class Controller extends HttpServlet
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			//getting the existent cart 
 			HttpSession session = request.getSession();
 			if (session.getAttribute("cart") == null) {
 				session.setAttribute("cart", new ShoppingCart());
 			}
+			//adding the selected coupon to the cart
 			ShoppingCart cart = (ShoppingCart) (session.getAttribute("cart"));
 			cart.addCoupon(coupon);
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/shoppingCart.jsp");
@@ -501,8 +563,14 @@ public class Controller extends HttpServlet
 			// problem.. product id wasnot received
 	}}
 
+	 /** 
+     * forward the page to the viewCoupons page in order to show all coupons
+     * @param request, response
+     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     */
 	public void GetCouponsPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		//getting the location of the client
 		double latitude = Double.parseDouble(request.getParameter("uLatitude").toString());
 		double longitude = Double.parseDouble(request.getParameter("uLongitude").toString());
 		List<Coupon> coupons = null;
@@ -521,13 +589,23 @@ public class Controller extends HttpServlet
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/viewCoupons.jsp");
 		dispatcher.forward(request, response);
 	}
-	
+
+	 /** 
+     * forward the page to the mainPage page
+     * @param request, response
+     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     */
 	public void MainPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/mainPage.jsp");
 		dispatcher.forward(request, response);
 	}
 	
+	 /** 
+     * forward the page to the login page
+     * @param request, response
+     * @throws javax.servlet.ServletException, java.io.IOException if there is a problem forward the page.
+     */
 	public void LoginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		List<String> lines = Files.readAllLines(Paths.get(getServletContext().getRealPath("/WEB-INF/login.txt")), Charset.defaultCharset());
@@ -614,7 +692,7 @@ public class Controller extends HttpServlet
 		}
 		else if(path.contains("addToCart"))
 		{
-			AddToCart(request, response);
+			shoppingCart(request, response);
 		}
 		else if(path.contains("shopping-cart"))
 		{

@@ -1,20 +1,27 @@
 package il.ac.hit.couponsproject.model.dto;
 
+
+/** 
+ * Class that describe a coupon
+ */
 public class Coupon
 {
-    private int id;
-    private String name;
-    private String description;
-    private double latitude;
-    private double longitude;
-    private String expiredate;
-    private double price;
-    private String image;
-    private int discount;
-    private double newprice;
-    private String location;
-    private String category;
-    
+	
+    private int id, discount;
+    private String name, description, expiredate, image, location, category;
+    private double latitude, longitude, price, newprice;
+
+    /** 
+     * Default constructor
+     */
+	public Coupon()
+	{
+		super();
+	}
+    /** 
+     * Constructor that create a new coupon
+     * @param id, name, description, latitude, longitude, expiredate, price, image, discount, newPruce,location, category.
+     */
 	public Coupon(int id, String name, String description, double latitude, double longitude, String expiredate, double price, String image, int discount, double newprice, String location,
 			String category)
 	{
@@ -32,6 +39,11 @@ public class Coupon
 		this.location = location;
 		this.category = category;
 	}
+	
+	/** 
+     * Constructor that create a new coupon without a id
+     * @param name, description, latitude, longitude, expiredate, price, image, discount, newPruce,location, category.
+     */
 	public Coupon(String name, String description, double latitude, double longitude, String expiredate, double price, String image, int discount, double newprice, String location,
 			String category)
 	{
@@ -48,6 +60,8 @@ public class Coupon
 		this.location = location;
 		this.category = category;
 	}
+	
+	// Getters and setters functions
 	public String getCategory()
 	{
 		return category;
@@ -56,35 +70,6 @@ public class Coupon
 	{
 		this.category = category;
 	}
-	public Coupon(int id, String name, String description, double latitude, double longitude, String expiredate, double price, String image, int discount, double newprice, String location)
-	{
-		super();
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.expiredate = expiredate;
-		this.price = price;
-		this.image = image;
-		this.discount = discount;
-		this.newprice = newprice;
-		this.location = location;
-	}
-	public Coupon(String name, String description, double latitude, double longitude, String expiredate, double price, String image, int discount, double newprice, String location)
-	{
-		super();
-		this.name = name;
-		this.description = description;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.expiredate = expiredate;
-		this.price = price;
-		this.image = image;
-		this.discount = discount;
-		this.newprice = newprice;
-		this.location = location;
-	}
 	public String getLocation()
 	{
 		return location;
@@ -92,48 +77,6 @@ public class Coupon
 	public void setLocation(String location)
 	{
 		this.location = location;
-	}
-	public Coupon()
-	{
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	public Coupon(int id, String name, String description, double latitude,
-			double longitude, String expiredate, double price, String image,
-			int discount, double newprice)
-	{
-		super();
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.expiredate = expiredate;
-		this.price = price;
-		this.image = image;
-		this.discount = discount;
-		this.newprice = newprice;
-	}
-	public Coupon(String name, String description, double latitude,
-			double longitude, String expiredate, double price, String image,
-			int discount, double newprice)
-	{
-		super();
-		this.name = name;
-		this.description = description;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.expiredate = expiredate;
-		this.price = price;
-		this.image = image;
-		this.discount = discount;
-		this.newprice = newprice;
-	}
-	@Override
-	public String toString()
-	{
-		return "Coupon [id=" + id + ", name=" + name + ", description=" + description + ", latitude=" + latitude + ", longitude=" + longitude + ", expiredate=" + expiredate + ", price=" + price
-				+ ", image=" + image + ", discount=" + discount + ", newprice=" + newprice + ", location=" + location + ", category=" + category + "]";
 	}
 	public int getId()
 	{
@@ -214,5 +157,13 @@ public class Coupon
 	public void setNewprice(double newprice)
 	{
 		this.newprice = newprice;
+	}
+	
+	
+	@Override
+	public String toString()
+	{
+		return "Coupon [id=" + id + ", name=" + name + ", description=" + description + ", latitude=" + latitude + ", longitude=" + longitude + ", expiredate=" + expiredate + ", price=" + price
+				+ ", image=" + image + ", discount=" + discount + ", newprice=" + newprice + ", location=" + location + ", category=" + category + "]";
 	}
 }

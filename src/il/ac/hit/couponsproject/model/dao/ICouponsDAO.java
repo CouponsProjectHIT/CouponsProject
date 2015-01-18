@@ -6,7 +6,7 @@ import java.util.*;
 
 
 /**
- * This is an interface that connect between the database and the Couopn class
+ * This is an interface that connect between the database and the Couopon class
  * all methods listed below
  */
 public interface ICouponsDAO

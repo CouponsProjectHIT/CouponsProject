@@ -23,7 +23,7 @@ import org.hibernate.cfg.AnnotationConfiguration;
  */
 public class HibernateCouponsDAO implements ICouponsDAO
 {
-	// create singletone instance of the HibernateCouponsDAO
+	// create singleton instance of the HibernateCouponsDAO
 	public static HibernateCouponsDAO instance;
 	// Create a new SessionFactory
 	SessionFactory factory = new AnnotationConfiguration().configure().buildSessionFactory();
@@ -233,12 +233,8 @@ public class HibernateCouponsDAO implements ICouponsDAO
 		int rowCount = 0;
 		try
 		{
-			// Coupon coupon = getCoupon(i_id);
 			session = factory.openSession();
 			session.beginTransaction();
-			// session.delete(coupon);
-			// session.getTransaction().commit();
-
 			Query q = session.createQuery("delete from Coupon where ID = :id");
 			q.setParameter("id", i_id);
 			rowCount = q.executeUpdate();
