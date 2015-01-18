@@ -35,8 +35,6 @@
 	<h2>העגלה ריקה</h2>
 	<a class="btn btn-primary" href="main-page" role="button">מסך ראשי</a>
 <%} %>
-<!-- <a href=/webstore/WebStoreController/getproducts>back</a> 
- -->
 	<script	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 

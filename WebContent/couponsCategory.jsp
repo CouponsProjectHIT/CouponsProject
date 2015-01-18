@@ -8,57 +8,74 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>צפייה בקופונים</title>
 
-	<link href="${pageContext.request.contextPath}/css/bootstrap.min.css"rel="stylesheet" type="text/css" />
-	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/jquery-ui.min.css"/>
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquery-ui.theme.min.css" type="text/css" />
-    
-    <script src="${pageContext.request.contextPath}/js/jquery-2.1.3.min.js"></script>
-	<script src="${pageContext.request.contextPath}/js/jquery-ui.min.js"></script>
+<link href="${pageContext.request.contextPath}/css/bootstrap.min.css"
+	rel="stylesheet" type="text/css" />
+<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/jquery-ui.min.css" />
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/css/jquery-ui.theme.min.css"
+	type="text/css" />
+
+<script src="${pageContext.request.contextPath}/js/jquery-2.1.3.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/jquery-ui.min.js"></script>
 </head>
 <body>
-<% HashSet<String> categories = (HashSet<String>) request.getAttribute("categories"); %>
-<div align="center" >
-				<label for="categorySelection">בחר קטגוריה</label>
-					<select id="categorySelection">
-						<%
-							for (String category : categories)
-								{
-						%>
-							<option class="form-control" id="category-name" name="category-name" value=<%=category%>><%=category%></option>
-						<%
-								}
-						%>
-					</select>
-					<button class="btn btn-primary"  onclick="forward()">קטגוריה</button> 
-		</div>
-		
-		
-		<script>
+	<%
+		HashSet<String> categories = (HashSet<String>) request.getAttribute("categories");
+	%>
+	<div align="center">
+		<label for="categorySelection">בחר קטגוריה</label> <select
+			id="categorySelection">
+			<%
+				for (String category : categories)
+									{
+			%>
+			<option class="form-control" id="category-name" name="category-name"
+				value=<%=category%>><%=category%></option>
+			<%
+				}
+			%>
+		</select>
+		<button class="btn btn-primary" onclick="forward()">קטגוריה</button>
+	</div>
+
+
+	<script>
 		var latitude, longitude;
-		$(document).ready(function(){
-		    if (navigator.geolocation) {
-		        navigator.geolocation.getCurrentPosition(handle_geolocation_query,handle_errors);
-		    } else {
-		        alert('Device probably not ready.');
-		    }
-		});
-		function handle_errors(error) {  
-		    // error handling here
+		$(document).ready(
+				function()
+				{
+					if (navigator.geolocation)
+					{
+						navigator.geolocation.getCurrentPosition(
+								handle_geolocation_query, handle_errors);
+					} else
+					{
+						alert('Device probably not ready.');
+					}
+				});
+		function handle_errors(error)
+		{
+			// error handling here
 		}
-		function handle_geolocation_query(position){  
-		    latitude = (position.coords.latitude);
-		    longitude = (position.coords.longitude); 
-		}  
-		function forward(){
+		function handle_geolocation_query(position)
+		{
+			latitude = (position.coords.latitude);
+			longitude = (position.coords.longitude);
+		}
+		function forward()
+		{
 			var select = document.getElementById("categorySelection");
 			var selectedCategory = select.options[select.selectedIndex].value;
-			window.location = "/CouponsProject/Controller/coupon-cat?category=" + selectedCategory + "&latitude=" + latitude + "&longitude=" + longitude;
+			window.location = "/CouponsProject/Controller/coupon-cat?category="
+					+ selectedCategory + "&latitude=" + latitude
+					+ "&longitude=" + longitude;
 		}
-		
-		</script>
+	</script>
 
-	<script	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 </body>
 </html>
