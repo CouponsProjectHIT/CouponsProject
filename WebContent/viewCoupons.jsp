@@ -65,8 +65,7 @@
 				for (String category : categories)
 									{
 			%>
-			<option class="form-control" id="category-name" name="category-name"
-				value=<%=category%>><%=category%></option>
+			<option class="form-control" id="category-name" name="category-name" value=<%=category%>><%=category%></option>
 			<%
 				}
 			%>

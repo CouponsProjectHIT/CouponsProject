@@ -135,7 +135,6 @@ public class HibernateCouponsDAO implements ICouponsDAO
 			{
 				categories.add(coupon.getCategory());
 			}
-			System.out.println(categories.size());
 		}
 		catch (HibernateException e)
 		{
